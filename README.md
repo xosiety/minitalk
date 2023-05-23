@@ -1,10 +1,16 @@
 
 # Minitalk
 
+<!-- TOC -->
+* [Minitalk](#minitalk)
+* [Mandatory part](#mandatory-part)
+* [Bonus](#bonus)
+  * [Introduzione](#introduzione)
+  * [Esempio di utilizzo di sigaction](#esempio-di-utilizzo-di-sigaction)
+<!-- TOC -->
+
 Il progetto Minitalk è un progetto di rete che permette di comunicare tra due processi utilizzando esclusivamente segnali.
-
-
-## Introduzione
+Lo scopo di questo progetto è creare un piccolo programma di scambio di dati utilizzando i segnali UNIX.
 
 Ecco un riassunto delle funzioni permesse all'interno del progetto con i relativi link al manuale.
 
@@ -23,18 +29,30 @@ Ecco un riassunto delle funzioni permesse all'interno del progetto con i relativ
 | [`usleep`](https://man7.org/linux/man-pages/man3/usleep.3.html)                     | La funzione `usleep` sospende l'esecuzione di un programma per un numero specificato di microsecondi. Funziona in modo simile alla funzione `sleep`, ma accetta una frazione di secondo più piccola come argomento.                                                         |                                                                                                                                                                  
 | [`exit`](https://man7.org/linux/man-pages/man3/exit.3.html)                         | La funzione `exit` viene utilizzata per terminare l'esecuzione di un programma in modo volontario. Può anche essere utilizzata per restituire un codice di stato al sistema operativo.                                                                                      |
 
+# Mandatory part
 
-Ci sono alcune differenze significative tra sigaction e signal:
+Produrre eseguibili per il server e il client.
+Il client deve comunicare una stringa passata come parametro al server (identificato dal suo ID di processo), che la visualizza successivamente.
+Utilizzare solo i segnali SIGUSR1 e SIGUSR2.
 
-Gestione dei segnali multipli: signal ha una gestione semplice dei segnali, il che significa che quando viene chiamato per un segnale specifico, il gestore di segnali predefinito viene sostituito con il nuovo gestore specificato. Questo significa che non è possibile gestire separatamente i segnali multipli. Al contrario, sigaction consente di specificare un gestore di segnali separato per ciascun segnale e fornisce maggiore flessibilità nella gestione dei segnali multipli.
+# Bonus
 
-Compatibilità portabile: signal ha un comportamento che varia tra le diverse implementazioni del sistema operativo e potrebbe non essere completamente portabile tra le piattaforme. D'altra parte, sigaction offre una maggiore portabilità tra diverse piattaforme e sistemi operativi, in quanto definisce un'interfaccia standardizzata per la gestione dei segnali.
+Aggiungere un sistema di conferma di ricezione.
+Supportare caratteri Unicode.
 
-Gestione avanzata dei segnali: sigaction fornisce funzionalità aggiuntive rispetto a signal. Ad esempio, sigaction consente di specificare l'insieme di segnali che devono essere bloccati durante l'esecuzione del gestore del segnale, offrendo maggiore controllo sulla gestione dei segnali. Inoltre, sigaction supporta la gestione dei segnali interrompibili (SA_RESTART flag), consentendo di riprendere automaticamente le chiamate di sistema interrotte dai segnali.
+## Introduzione
 
-Trattamento dei segnali non mascherabili: signal non fornisce un modo per bloccare segnali specifici che non possono essere mascherati. sigaction, invece, consente di gestire segnali non mascherabili utilizzando il campo sa_sigaction della struttura struct sigaction, che può essere utilizzato per fornire un gestore di segnali più avanzato.
+Ci sono alcune differenze significative tra *sigaction* e *signal*:
 
-In generale, se si desidera una gestione più avanzata e portabile dei segnali, è consigliato utilizzare sigaction. Tuttavia, se si desidera una gestione più semplice e non è necessaria la portabilità tra diverse piattaforme, signal può essere utilizzato.
+*Gestione dei segnali multipli*: signal ha una gestione semplice dei segnali, il che significa che quando viene chiamato per un segnale specifico, il gestore di segnali predefinito viene sostituito con il nuovo gestore specificato. Questo significa che non è possibile gestire separatamente i segnali multipli. Al contrario, sigaction consente di specificare un gestore di segnali separato per ciascun segnale e fornisce maggiore flessibilità nella gestione dei segnali multipli.
+
+*Compatibilità portabile*: signal ha un comportamento che varia tra le diverse implementazioni del sistema operativo e potrebbe non essere completamente portabile tra le piattaforme. D'altra parte, sigaction offre una maggiore portabilità tra diverse piattaforme e sistemi operativi, in quanto definisce un'interfaccia standardizzata per la gestione dei segnali.
+
+*Gestione avanzata dei segnali*: sigaction fornisce funzionalità aggiuntive rispetto a signal. Ad esempio, sigaction consente di specificare l'insieme di segnali che devono essere bloccati durante l'esecuzione del gestore del segnale, offrendo maggiore controllo sulla gestione dei segnali. Inoltre, sigaction supporta la gestione dei segnali interrompibili (SA_RESTART flag), consentendo di riprendere automaticamente le chiamate di sistema interrotte dai segnali.
+
+*Trattamento dei segnali non mascherabili*: signal non fornisce un modo per bloccare segnali specifici che non possono essere mascherati. sigaction, invece, consente di gestire segnali non mascherabili utilizzando il campo sa_sigaction della struttura struct sigaction, che può essere utilizzato per fornire un gestore di segnali più avanzato.
+
+In generale, se si desidera una gestione più avanzata e portabile dei segnali, è consigliato utilizzare *sigaction*. Tuttavia, se si desidera una gestione più semplice e non è necessaria la portabilità tra diverse piattaforme, signal può essere utilizzato.
 
 Ecco una altra tabella che mostra le differenze tra `signal` e `sigaction`:
 
@@ -80,10 +98,7 @@ Ecco una spiegazione dettagliata su come utilizzare sigaction:
     }
 
 Nell'esempio sopra, signalHandler è una funzione definita dall'utente che viene eseguita quando il segnale specificato (SIGINT nel caso sopra) viene ricevuto dal processo. Puoi personalizzare questa funzione per eseguire azioni specifiche in risposta al segnale ricevuto.
-
 La struttura struct sigaction viene utilizzata per configurare il comportamento di sigaction. Puoi impostare sa_handler con il puntatore alla funzione che gestirà il segnale. L'insieme sa_mask può essere utilizzato per specificare un insieme di segnali che devono essere bloccati durante l'esecuzione del gestore del segnale. sa_flags può essere utilizzato per specificare opzioni aggiuntive, se necessario.
-
 Nel nostro esempio, viene utilizzata la funzione sigemptyset per svuotare l'insieme dei segnali bloccati durante l'esecuzione del gestore di segnali. Infine, la funzione sigaction viene chiamata per installare il gestore di segnali personalizzato (signalHandler) per il segnale specificato (SIGINT). Se l'installazione fallisce, verrà restituito -1 e verrà stampato un messaggio di errore.
-
 Dopo l'installazione del gestore di segnali, il programma può continuare con il resto del suo codice. Quando il segnale specificato viene ricevuto, la funzione signalHandler verrà chiamata, consentendo di eseguire le azioni desiderate in risposta al segnale.
 
