@@ -3,9 +3,9 @@
 
 <!-- TOC -->
 * [Minitalk](#minitalk)
-* [Mandatory part](#mandatory-part)
-* [Bonus](#bonus)
-  * [Introduzione](#introduzione)
+  * [Mandatory part](#mandatory-part)
+  * [Bonus](#bonus)
+* [Introduzione](#introduzione)
   * [Esempio di utilizzo di sigaction](#esempio-di-utilizzo-di-sigaction)
 <!-- TOC -->
 
@@ -29,18 +29,18 @@ Ecco un riassunto delle funzioni permesse all'interno del progetto con i relativ
 | [`usleep`](https://man7.org/linux/man-pages/man3/usleep.3.html)                     | La funzione `usleep` sospende l'esecuzione di un programma per un numero specificato di microsecondi. Funziona in modo simile alla funzione `sleep`, ma accetta una frazione di secondo più piccola come argomento.                                                         |                                                                                                                                                                  
 | [`exit`](https://man7.org/linux/man-pages/man3/exit.3.html)                         | La funzione `exit` viene utilizzata per terminare l'esecuzione di un programma in modo volontario. Può anche essere utilizzata per restituire un codice di stato al sistema operativo.                                                                                      |
 
-# Mandatory part
+## Mandatory part
 
 Produrre eseguibili per il server e il client.
 Il client deve comunicare una stringa passata come parametro al server (identificato dal suo ID di processo), che la visualizza successivamente.
 Utilizzare solo i segnali SIGUSR1 e SIGUSR2.
 
-# Bonus
+## Bonus
 
 Aggiungere un sistema di conferma di ricezione.
 Supportare caratteri Unicode.
 
-## Introduzione
+# Introduzione
 
 Ci sono alcune differenze significative tra *sigaction* e *signal*:
 
