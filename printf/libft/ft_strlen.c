@@ -1,20 +1,23 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_strlen.c                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afabbri <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: afabbri <afabbri@student.42roma.it>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/23 11:51:02 by afabbri           #+#    #+#             */
-/*   Updated: 2023/05/23 16:06:56 by afabbri          ###   ########.fr       */
+/*   Created: 2023/01/29 16:20:27 by afabbri           #+#    #+#             */
+/*   Updated: 2023/02/10 15:04:21 by afabbri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
+#include "libft.h"
 
-# include "../printf/libft/libft.h"
-# include "../printf/ft_printf.h"
-# include <signal.h>
+size_t	ft_strlen(const char *s)
+{
+	size_t	i;
 
-#endif
+	i = 0;
+	while (s[i])
+		i++;
+	return (i);
+}

@@ -1,20 +1,18 @@
 /* ************************************************************************** */
 /*                                                                            */
 /*                                                        :::      ::::::::   */
-/*   minitalk.h                                         :+:      :+:    :+:   */
+/*   ft_isascii.c                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afabbri <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: afabbri <afabbri@student.42roma.it>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
-/*   Created: 2023/05/23 11:51:02 by afabbri           #+#    #+#             */
-/*   Updated: 2023/05/23 16:06:56 by afabbri          ###   ########.fr       */
+/*   Created: 2023/01/23 13:41:37 by afabbri           #+#    #+#             */
+/*   Updated: 2023/02/10 15:25:56 by afabbri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#ifndef MINITALK_H
-# define MINITALK_H
+#include "libft.h"
 
-# include "../printf/libft/libft.h"
-# include "../printf/ft_printf.h"
-# include <signal.h>
-
-#endif
+int	ft_isascii(int c)
+{
+	return (c >= 0 && c <= 127);
+}
