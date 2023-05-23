@@ -6,9 +6,10 @@
 /*   By: afabbri <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 11:52:44 by afabbri           #+#    #+#             */
-/*   Updated: 2023/05/23 12:45:09 by afabbri          ###   ########.fr       */
+/*   Updated: 2023/05/23 12:51:43 by afabbri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 #include "../include/minitalk.h"
 
 void	ft_btoa(int sig)
