@@ -6,38 +6,11 @@
 /*   By: afabbri <marvin@42.fr>                     +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 12:13:19 by afabbri           #+#    #+#             */
-/*   Updated: 2023/05/23 14:10:03 by afabbri          ###   ########.fr       */
+/*   Updated: 2023/05/23 15:44:05 by afabbri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
-
-static int	ft_atoi(const char *str)
-{
-	int					i;
-	int					sign;
-	unsigned long int	result;
-
-	i = 0;
-	sign = 1;
-	result = 0;
-	while (str[i] == 32 || (str[i] >= 9 && str[i] <= 13))
-		i++;
-	if (str[i] == '-')
-	{
-		sign = -1;
-		i++;
-	}
-	else if (str[i] == '+')
-		i++;
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		result *= 10;
-		result += str[i] - '0';
-		i++;
-	}
-	return (result * sign);
-}
 
 void	ft_atob(int pid, char c)
 {
