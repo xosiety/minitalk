@@ -1,32 +1,26 @@
 
 Ecco una breve spiegazione di come funzionano i seguenti comandi:
 
-signal: signal è una funzione del C utilizzata per gestire i segnali del sistema. Consente di impostare l'handler (gestore) per un determinato segnale in modo che venga eseguita una determinata azione quando il segnale viene ricevuto dal processo.
+Ecco una spiegazione di come funzionano i comandi menzionati, presentati in una tabella Excel:
 
-sigemptyset: sigemptyset è una funzione che svuota (pulisce) un insieme di segnali. Viene utilizzata per inizializzare un insieme di segnali vuoto prima di utilizzarlo con altre funzioni come sigaddset o sigaction.
+| Comando      | Descrizione                                                                                                                                                                   |
+|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| signal       | Imposta un gestore di segnali predefinito o personalizzato per un segnale specifico.                                                                                          |
+| sigemptyset  | Svuota un insieme di segnali, rimuovendo tutti i segnali dal set.                                                                                                              |
+| sigaddset    | Aggiunge un segnale specifico a un insieme di segnali.                                                                                                                        |
+| sigaction    | Imposta o modifica il gestore di segnali per un segnale specifico, consentendo di installare un gestore personalizzato o ripristinare il gestore predefinito.                |
+| kill         | Invia un segnale a un processo specifico o a un gruppo di processi.                                                                                                           |
+| getpid       | Restituisce il PID (Process IDentifier) del processo chiamante.                                                                                                              |
+| malloc       | Alloca una quantità specifica di memoria dinamicamente, restituendo un puntatore al blocco di memoria allocato.                                                              |
+| free         | Libera la memoria precedentemente allocata dinamicamente con `malloc`, `calloc` o `realloc`.                                                                                 |
+| pause        | Sospende l'esecuzione del processo corrente fino a quando non viene ricevuto un segnale.                                                                                      |
+| sleep        | Sospende l'esecuzione del processo corrente per un certo numero di secondi.                                                                                                   |
+| usleep       | Sospende l'esecuzione del processo corrente per un certo numero di microsecondi.                                                                                             |
+| exit         | Termina l'esecuzione del programma corrente e restituisce un valore di uscita al sistema operativo.                                                                           |
+| perror       | Stampa un messaggio di errore sulla console corrispondente all'ultimo errore rilevato durante l'esecuzione di una chiamata di sistema o di una funzione della libreria C. |
 
-sigaddset: sigaddset viene utilizzata per aggiungere un segnale specifico a un insieme di segnali. Viene spesso utilizzata insieme a sigemptyset per creare un insieme di segnali personalizzato per la gestione dei segnali.
 
-sigaction: sigaction è una funzione che consente di impostare l'handler (gestore) per un segnale specifico. Può essere utilizzata per modificare il comportamento predefinito di un segnale o per installare un nuovo gestore di segnali personalizzato.
-
-kill: kill è una funzione utilizzata per inviare un segnale a un processo specifico. Può essere utilizzata per inviare segnali predefiniti o personalizzati ad altri processi nel sistema.
-
-getpid: getpid è una funzione che restituisce l'ID del processo corrente. Viene utilizzata per ottenere l'ID del processo in esecuzione al fine di scopi di identificazione o controllo.
-
-malloc: malloc è una funzione del C utilizzata per allocare dinamicamente una determinata quantità di memoria durante l'esecuzione del programma. Viene spesso utilizzata per allocare spazio per strutture dati complesse come array o strutture.
-
-free: free è una funzione che viene utilizzata per deallocare la memoria precedentemente allocata dinamicamente utilizzando malloc. Rilascia la memoria in modo che possa essere riutilizzata in seguito.
-
-pause: pause è una funzione che sospende l'esecuzione del programma fino a quando non viene ricevuto un segnale. Viene spesso utilizzata per bloccare il programma fino all'arrivo di un segnale specifico.
-
-sleep: sleep è una funzione che mette il processo in pausa per un certo numero di secondi. Il processo viene sospeso per la durata specificata come argomento.
-
-usleep: usleep è una funzione simile a sleep, ma mette in pausa il processo per un certo numero di microsecondi anziché secondi.
-
-exit: exit è una funzione che termina l'esecuzione del programma corrente e restituisce un valore di uscita specifico. Viene spesso utilizzata per terminare il programma in modo controllato.
-
-perror: perror è una funzione che stampa un messaggio di errore sulla console, includendo
-
+Questa tabella fornisce una panoramica dei comandi e delle loro funzionalità. Tuttavia, per una comprensione più completa di ciascun comando, sarebbe utile consultare la documentazione ufficiale del linguaggio di programmazione o del sistema operativo specifico in cui vengono utilizzati.
 
 Ci sono alcune differenze significative tra sigaction e signal:
 
@@ -39,6 +33,19 @@ Gestione avanzata dei segnali: sigaction fornisce funzionalità aggiuntive rispe
 Trattamento dei segnali non mascherabili: signal non fornisce un modo per bloccare segnali specifici che non possono essere mascherati. sigaction, invece, consente di gestire segnali non mascherabili utilizzando il campo sa_sigaction della struttura struct sigaction, che può essere utilizzato per fornire un gestore di segnali più avanzato.
 
 In generale, se si desidera una gestione più avanzata e portabile dei segnali, è consigliato utilizzare sigaction. Tuttavia, se si desidera una gestione più semplice e non è necessaria la portabilità tra diverse piattaforme, signal può essere utilizzato.
+
+Ecco una tabella che mostra le differenze tra `signal` e `sigaction`:
+
+| Caratteristica                | `signal`                                  | `sigaction`                                                                                                  |
+|-------------------------------|-------------------------------------------|--------------------------------------------------------------------------------------------------------------|
+| Tipo di gestore di segnali   | Puntatore a funzione (`void (*handler)()`) | Struttura `struct sigaction` contenente un membro `sa_handler` che può essere un puntatore a funzione        |
+| Gestione dell'insieme dei segnali bloccati durante l'esecuzione del gestore | Non specificato                             | `struct sigaction` contiene un membro `sa_mask` per l'insieme dei segnali bloccati durante l'esecuzione del gestore di segnali |
+| Opzioni aggiuntive            | Non specificato                             | `struct sigaction` contiene un membro `sa_flags` per specificare opzioni aggiuntive                            |
+| Compatibilità                  | Standard ANSI C                           | Standard POSIX                                                                                                |
+| Comportamento predefinito per i segnali ignorati | Reimposta al comportamento predefinito       | Non reimposta il comportamento predefinito per i segnali ignorati                                               |
+| Compatibilità con altre chiamate di sistema che utilizzano segnali | Potenziali problemi di compatibilità            | Meno probabilità di problemi di compatibilità                                                                  |
+
+È importante notare che le differenze possono variare a seconda del sistema operativo e delle implementazioni specifiche.
 
 Ecco una spiegazione dettagliata su come utilizzare sigaction:
 
