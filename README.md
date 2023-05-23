@@ -14,24 +14,25 @@ Ecco una breve spiegazione di come funzionano i seguenti comandi:
 - [`usleep`](https://man7.org/linux/man-pages/man3/usleep.3.html)
 - [`exit`](https://man7.org/linux/man-pages/man3/exit.3.html)
 
-| Comando      | Descrizione                                                                                                                                                                   |
-|--------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| signal       | Imposta un gestore di segnali predefinito o personalizzato per un segnale specifico.                                                                                          |
-| sigemptyset  | Svuota un insieme di segnali, rimuovendo tutti i segnali dal set.                                                                                                              |
-| sigaddset    | Aggiunge un segnale specifico a un insieme di segnali.                                                                                                                        |
-| sigaction    | Imposta o modifica il gestore di segnali per un segnale specifico, consentendo di installare un gestore personalizzato o ripristinare il gestore predefinito.                |
-| kill         | Invia un segnale a un processo specifico o a un gruppo di processi.                                                                                                           |
-| getpid       | Restituisce il PID (Process IDentifier) del processo chiamante.                                                                                                              |
-| malloc       | Alloca una quantità specifica di memoria dinamicamente, restituendo un puntatore al blocco di memoria allocato.                                                              |
-| free         | Libera la memoria precedentemente allocata dinamicamente con `malloc`, `calloc` o `realloc`.                                                                                 |
-| pause        | Sospende l'esecuzione del processo corrente fino a quando non viene ricevuto un segnale.                                                                                      |
-| sleep        | Sospende l'esecuzione del processo corrente per un certo numero di secondi.                                                                                                   |
-| usleep       | Sospende l'esecuzione del processo corrente per un certo numero di microsecondi.                                                                                             |
-| exit         | Termina l'esecuzione del programma corrente e restituisce un valore di uscita al sistema operativo.                                                                           |
-| perror       | Stampa un messaggio di errore sulla console corrispondente all'ultimo errore rilevato durante l'esecuzione di una chiamata di sistema o di una funzione della libreria C. |
 
+Ecco un riassunto delle funzioni permesse all'interno del progetto con i relativi link al manuale.
 
-Questa tabella fornisce una panoramica dei comandi e delle loro funzionalità. Tuttavia, per una comprensione più completa di ciascun comando, sarebbe utile consultare la documentazione ufficiale del linguaggio di programmazione o del sistema operativo specifico in cui vengono utilizzati.
+| Funzione | Riassunto |
+|----------|-----------|
+| malloc   | La funzione `malloc` viene utilizzata in C per allocare memoria dinamicamente durante l'esecuzione di un programma. Prende come argomento la dimensione in byte della memoria richiesta e restituisce un puntatore alla memoria allocata. |
+| free     | La funzione `free` viene utilizzata per liberare la memoria precedentemente allocata tramite `malloc` o altre funzioni di allocazione della memoria. Libera la memoria specificata dal puntatore passato come argomento, consentendo al sistema operativo di riutilizzarla. |
+| write    | La funzione `write` consente di scrivere dati in un file o in un descrittore di file. Prende come argomenti il descrittore di file, il buffer dei dati e la dimensione dei dati da scrivere. Restituisce il numero di byte scritti o -1 in caso di errore. |
+| getpid   | La funzione `getpid` restituisce l'ID del processo chiamante. L'ID del processo è un numero univoco assegnato dal sistema operativo a ogni processo in esecuzione nel sistema. |
+| signal   | La funzione `signal` viene utilizzata per impostare il comportamento di un programma in risposta a segnali specifici inviati dal sistema operativo o da altri processi. Prende come argomenti il segnale da gestire e il gestore di segnale personalizzato. |
+| sigemptyset & sigaddset | Le funzioni `sigemptyset` e `sigaddset` sono utilizzate per inizializzare e modificare un insieme di segnali. `sigemptyset` svuota un insieme di segnali, mentre `sigaddset` aggiunge un segnale all'insieme. |
+| sigaction | La funzione `sigaction` viene utilizzata per impostare il comportamento di un programma in risposta a segnali specifici. Consente di specificare un gestore di segnale personalizzato e altre opzioni per la gestione dei segnali. |
+| pause    | La funzione `pause` sospende l'esecuzione di un programma fino a quando non viene ricevuto un segnale. Viene comunemente utilizzata per bloccare un processo fino a quando non viene ricevuto un segnale di terminazione o un altro segnale specificato. |
+| kill     | La funzione `kill` viene utilizzata per inviare un segnale a un processo specificato da un ID di processo. Può essere utilizzata per inviare segnali di terminazione o per interagire con altri processi. |
+| sleep    | La funzione `sleep` sospende l'esecuzione di un programma per un numero specificato di secondi. È utile per introdurre un ritardo nell'esecuzione di un programma o per attendere un certo periodo di tempo. |
+| usleep   | La funzione `usleep` sospende l'esecuzione di un programma per un numero specificato di microsecondi. Funz
+
+iona in modo simile alla funzione `sleep`, ma accetta una frazione di secondo più piccola come argomento. |
+| exit     | La funzione `exit` viene utilizzata per terminare l'esecuzione di un programma in modo volontario. Può anche essere utilizzata per restituire un codice di stato al sistema operativo. |
 
 Ci sono alcune differenze significative tra sigaction e signal:
 
