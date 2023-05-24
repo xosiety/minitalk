@@ -9,7 +9,6 @@
   * [Esempio di utilizzo di sigaction](#esempio-di-utilizzo-di-sigaction)
 <!-- TOC -->
 
-Il progetto Minitalk è un progetto di rete che permette di comunicare tra due processi utilizzando esclusivamente segnali.
 Lo scopo di questo progetto è creare un piccolo programma di scambio di dati utilizzando i segnali UNIX.
 
 Ecco un riassunto delle funzioni permesse all'interno del progetto con i relativi link al manuale.
@@ -51,8 +50,6 @@ Ci sono alcune differenze significative tra *sigaction* e *signal*:
 *Gestione avanzata dei segnali*: sigaction fornisce funzionalità aggiuntive rispetto a signal. Ad esempio, sigaction consente di specificare l'insieme di segnali che devono essere bloccati durante l'esecuzione del gestore del segnale, offrendo maggiore controllo sulla gestione dei segnali. Inoltre, sigaction supporta la gestione dei segnali interrompibili (SA_RESTART flag), consentendo di riprendere automaticamente le chiamate di sistema interrotte dai segnali.
 
 *Trattamento dei segnali non mascherabili*: signal non fornisce un modo per bloccare segnali specifici che non possono essere mascherati. sigaction, invece, consente di gestire segnali non mascherabili utilizzando il campo sa_sigaction della struttura struct sigaction, che può essere utilizzato per fornire un gestore di segnali più avanzato.
-
-In generale, se si desidera una gestione più avanzata e portabile dei segnali, è consigliato utilizzare *sigaction*. Tuttavia, se si desidera una gestione più semplice e non è necessaria la portabilità tra diverse piattaforme, signal può essere utilizzato.
 
 Ecco una altra tabella che mostra le differenze tra `signal` e `sigaction`:
 
@@ -97,8 +94,16 @@ Ecco una spiegazione dettagliata su come utilizzare sigaction:
     return 0;
     }
 
-Nell'esempio sopra, signalHandler è una funzione definita dall'utente che viene eseguita quando il segnale specificato (SIGINT nel caso sopra) viene ricevuto dal processo. Puoi personalizzare questa funzione per eseguire azioni specifiche in risposta al segnale ricevuto.
-La struttura struct sigaction viene utilizzata per configurare il comportamento di sigaction. Puoi impostare sa_handler con il puntatore alla funzione che gestirà il segnale. L'insieme sa_mask può essere utilizzato per specificare un insieme di segnali che devono essere bloccati durante l'esecuzione del gestore del segnale. sa_flags può essere utilizzato per specificare opzioni aggiuntive, se necessario.
-Nel nostro esempio, viene utilizzata la funzione sigemptyset per svuotare l'insieme dei segnali bloccati durante l'esecuzione del gestore di segnali. Infine, la funzione sigaction viene chiamata per installare il gestore di segnali personalizzato (signalHandler) per il segnale specificato (SIGINT). Se l'installazione fallisce, verrà restituito -1 e verrà stampato un messaggio di errore.
+Nell'esempio sopra, signalHandler è una funzione definita dall'utente che viene eseguita quando il segnale specificato (SIGINT nel caso sopra) viene ricevuto dal processo.
+
+La struttura struct sigaction viene utilizzata per configurare il comportamento di sigaction. Puoi impostare sa_handler con il puntatore alla funzione che gestirà il segnale. 
+
+L'insieme sa_mask può essere utilizzato per specificare un insieme di segnali che devono essere bloccati durante l'esecuzione del gestore del segnale. sa_flags può essere utilizzato per specificare opzioni aggiuntive, se necessario.
+
+Nel nostro esempio, viene utilizzata la funzione sigemptyset per svuotare l'insieme dei segnali bloccati durante l'esecuzione. 
+
+Infine, la funzione sigaction viene chiamata per installare il gestore di segnali personalizzato (signalHandler) per il segnale specificato (SIGINT). 
+Se l'installazione fallisce, verrà restituito -1 e verrà stampato un messaggio di errore.
+
 Dopo l'installazione del gestore di segnali, il programma può continuare con il resto del suo codice. Quando il segnale specificato viene ricevuto, la funzione signalHandler verrà chiamata, consentendo di eseguire le azioni desiderate in risposta al segnale.
 

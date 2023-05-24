@@ -3,16 +3,16 @@
 /*                                                        :::      ::::::::   */
 /*   server.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afabbri <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: afabbri <afabbri@student.42roma.it>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 11:52:44 by afabbri           #+#    #+#             */
-/*   Updated: 2023/05/23 14:10:29 by afabbri          ###   ########.fr       */
+/*   Updated: 2023/05/24 10:45:16 by afabbri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
 
-void	ft_btoa(int sig)
+void	ft_btoa(int sig, siginfo_t *info, void *context)
 {
 	static int	bit;
 	static int	i;
@@ -22,6 +22,8 @@ void	ft_btoa(int sig)
 	bit++;
 	if (bit == 8)
 	{
+		if (i == 0)
+			kill(info->si_pid, SIGUSR2);
 		ft_printf("%c", i);
 		bit = 0;
 		i = 0;
@@ -30,7 +32,8 @@ void	ft_btoa(int sig)
 
 int	main(int argc, char **argv)
 {
-	int	pid;
+	int					pid;
+	struct sigaction	act;
 
 	(void)argv;
 	if (argc != 1)
@@ -40,11 +43,14 @@ int	main(int argc, char **argv)
 	}
 	pid = getpid();
 	ft_printf("%d\n", pid);
+		act.sa_sigaction = ft_btoa;
+	sigemptyset(&act.sa_mask);
+	act.sa_flags = 0;
 	while (argc == 1)
 	{
-		signal(SIGUSR1, ft_btoa);
-		signal(SIGUSR2, ft_btoa);
-		pause ();
+		sigaction(SIGUSR1, &act, NULL);
+		sigaction(SIGUSR2, &act, NULL);
+		pause();
 	}
 	return (0);
 }

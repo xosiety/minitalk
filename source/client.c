@@ -3,14 +3,20 @@
 /*                                                        :::      ::::::::   */
 /*   client.c                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: afabbri <marvin@42.fr>                     +#+  +:+       +#+        */
+/*   By: afabbri <afabbri@student.42roma.it>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 12:13:19 by afabbri           #+#    #+#             */
-/*   Updated: 2023/05/23 16:19:07 by afabbri          ###   ########.fr       */
+/*   Updated: 2023/05/24 10:45:02 by afabbri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../include/minitalk.h"
+
+void	confirm_msg(int signal)
+{
+	if (signal == SIGUSR2)
+		ft_printf("maria, il signor gianni, ha accettato l'invito\n");
+}
 
 void	ft_atob(int pid, char c)
 {
