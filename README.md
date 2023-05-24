@@ -1,15 +1,15 @@
 
-# Minitalk
+# 📖 Minitalk
 
 <!-- TOC -->
-* [Minitalk](#minitalk)
-* [Introduzione](#introduzione)
-  * [Mandatory part](#mandatory-part)
-  * [Bonus](#bonus)
-  * [Esempio di utilizzo di sigaction](#esempio-di-utilizzo-di-sigaction)
+* [📖 Minitalk](#-minitalk)
+* [💡 Introduzione](#-introduzione)
+  * [📝 Mandatory part](#-mandatory-part)
+  * [⏭️ Bonus](#-bonus)
+* [🛠️ Sigaction](#-sigaction)
 <!-- TOC -->
 
-# Introduzione
+# 💡 Introduzione
 
 Lo scopo di questo progetto è creare un piccolo programma di scambio di dati utilizzando i segnali UNIX.
 
@@ -30,7 +30,7 @@ Ecco un riassunto delle funzioni permesse all'interno del progetto con i relativ
 | [`usleep`](https://man7.org/linux/man-pages/man3/usleep.3.html)                     | La funzione `usleep` sospende l'esecuzione di un programma per un numero specificato di microsecondi. Funziona in modo simile alla funzione `sleep`, ma accetta una frazione di secondo più piccola come argomento.                                                         |                                                                                                                                                                  
 | [`exit`](https://man7.org/linux/man-pages/man3/exit.3.html)                         | La funzione `exit` viene utilizzata per terminare l'esecuzione di un programma in modo volontario. Può anche essere utilizzata per restituire un codice di stato al sistema operativo.                                                                                   
 
-## Mandatory part
+## 📝 Mandatory part
 
 Produrre eseguibili per il server e il client.
 
@@ -80,7 +80,7 @@ Nell'esempio sopra, vengono definiti due signal handler: `sigusr1_handler()` per
 
 Il programma entra quindi in un ciclo while che esegue le azioni del programma principale. Nel frattempo, se il processo riceve SIGUSR1 o SIGUSR2, verranno eseguiti i rispettivi signal handler.
 
-## Bonus
+## ⏭️ Bonus
 
 Aggiungere un sistema di conferma di ricezione.
 Il progetto bonus dovrá a che supportare caratteri Unicode.
@@ -109,7 +109,7 @@ Ecco una altra tabella che mostra le differenze tra `signal` e `sigaction`:
 
 È importante notare che le differenze possono variare a seconda del sistema operativo e delle implementazioni specifiche.
 
-## Esempio di utilizzo di sigaction
+# 🛠️ Sigaction
 
     #include <stdio.h>
     #include <stdlib.h>
