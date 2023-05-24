@@ -86,17 +86,7 @@ Aggiungere un sistema di conferma di ricezione.
 Il progetto bonus dovrá a che supportare caratteri Unicode.
 Per realizzare la parte bonus sará fondamentale conoscere le differenze tra *sigaction* e *signal*
 
-Eccone alcune delle piu significative:
-
-*Gestione dei segnali multipli*: signal ha una gestione semplice dei segnali, il che significa che quando viene chiamato per un segnale specifico, il gestore di segnali predefinito viene sostituito con il nuovo gestore specificato. Questo significa che non è possibile gestire separatamente i segnali multipli. Al contrario, sigaction consente di specificare un gestore di segnali separato per ciascun segnale e fornisce maggiore flessibilità nella gestione dei segnali multipli.
-
-*Compatibilità portabile*: signal ha un comportamento che varia tra le diverse implementazioni del sistema operativo e potrebbe non essere completamente portabile tra le piattaforme. D'altra parte, sigaction offre una maggiore portabilità tra diverse piattaforme e sistemi operativi, in quanto definisce un'interfaccia standardizzata per la gestione dei segnali.
-
-*Gestione avanzata dei segnali*: sigaction fornisce funzionalità aggiuntive rispetto a signal. Ad esempio, sigaction consente di specificare l'insieme di segnali che devono essere bloccati durante l'esecuzione del gestore del segnale, offrendo maggiore controllo sulla gestione dei segnali. Inoltre, sigaction supporta la gestione dei segnali interrompibili (SA_RESTART flag), consentendo di riprendere automaticamente le chiamate di sistema interrotte dai segnali.
-
-*Trattamento dei segnali non mascherabili*: signal non fornisce un modo per bloccare segnali specifici che non possono essere mascherati. sigaction, invece, consente di gestire segnali non mascherabili utilizzando il campo sa_sigaction della struttura struct sigaction, che può essere utilizzato per fornire un gestore di segnali più avanzato.
-
-Ecco una altra tabella che mostra le differenze tra `signal` e `sigaction`:
+Ecco una altra tabella che evidenzia le differenze tra `signal` e `sigaction`:
 
 | Caratteristica                                                              | `signal`                                    | `sigaction`                                                                                                                    |
 |-----------------------------------------------------------------------------|---------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
