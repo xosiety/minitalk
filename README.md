@@ -11,7 +11,7 @@
 
 # 💡 Introduzione
 
-Lo scopo di questo progetto è creare un piccolo programma di scambio di dati utilizzando i segnali UNIX.
+L'obiettivo del progetto è creare un sistema di trasmissione di messaggi semplice ma funzionale utilizzando i segnali Unix come mezzo di comunicazione. Il mittente invia un messaggio al destinatario convertendo il messaggio in sequenze di segnali.
 
 Ecco un riassunto delle funzioni permesse all'interno del progetto con i relativi link al manuale.
 
