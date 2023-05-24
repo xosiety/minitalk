@@ -9,6 +9,8 @@
   * [Esempio di utilizzo di sigaction](#esempio-di-utilizzo-di-sigaction)
 <!-- TOC -->
 
+# Introduzione
+
 Lo scopo di questo progetto è creare un piccolo programma di scambio di dati utilizzando i segnali UNIX.
 
 Ecco un riassunto delle funzioni permesse all'interno del progetto con i relativi link al manuale.
@@ -23,11 +25,10 @@ Ecco un riassunto delle funzioni permesse all'interno del progetto con i relativ
 | [`sigemptyset & sigaddset`](https://man7.org/linux/man-pages/man3/sigsetops.3.html) | Le funzioni `sigemptyset` e `sigaddset` sono utilizzate per inizializzare e modificare un insieme di segnali. `sigemptyset` svuota un insieme di segnali, mentre `sigaddset` aggiunge un segnale all'insieme.                                                               |
 | [`sigaction`](https://man7.org/linux/man-pages/man2/sigaction.2.html)               | La funzione `sigaction` viene utilizzata per impostare il comportamento di un programma in risposta a segnali specifici. Consente di specificare un gestore di segnale personalizzato e altre opzioni per la gestione dei segnali.                                          |
 | [`pause`](https://man7.org/linux/man-pages/man2/pause.2.html)                       | La funzione `pause` sospende l'esecuzione di un programma fino a quando non viene ricevuto un segnale. Viene comunemente utilizzata per bloccare un processo fino a quando non viene ricevuto un segnale di terminazione o un altro segnale specificato.                    |
-| [`kill`](https://man7.org/linux/man-pages/man2/kill.2.html)                         | La funzione `kill` viene utilizzata per inviare un segnale a un processo specificato da un ID di processo. Può essere utilizzata per inviare segnali di terminazione o per interagire con altri processi.                                                                   |
+| [`kill`](https://man7.org/linux/man-pages/man2/kill.2.html)                         | La funzione `kill` viene utilizzata per inviare un segnale a un processo specificato da un ID. Può essere utilizzata per inviare segnali di terminazione o per interagire con altri processi.                                                                   |
 | [`sleep`](https://man7.org/linux/man-pages/man3/sleep.3.html)                       | La funzione `sleep` sospende l'esecuzione di un programma per un numero specificato di secondi. È utile per introdurre un ritardo nell'esecuzione di un programma o per attendere un certo periodo di tempo.                                                                |
 | [`usleep`](https://man7.org/linux/man-pages/man3/usleep.3.html)                     | La funzione `usleep` sospende l'esecuzione di un programma per un numero specificato di microsecondi. Funziona in modo simile alla funzione `sleep`, ma accetta una frazione di secondo più piccola come argomento.                                                         |                                                                                                                                                                  
-| [`exit`](https://man7.org/linux/man-pages/man3/exit.3.html)                         | La funzione `exit` viene utilizzata per terminare l'esecuzione di un programma in modo volontario. Può anche essere utilizzata per restituire un codice di stato al sistema operativo.                                                                                    
-# Introduzione  |
+| [`exit`](https://man7.org/linux/man-pages/man3/exit.3.html)                         | La funzione `exit` viene utilizzata per terminare l'esecuzione di un programma in modo volontario. Può anche essere utilizzata per restituire un codice di stato al sistema operativo.                                                                                   
 
 ## Mandatory part
 
@@ -38,7 +39,7 @@ Utilizzare solo i segnali SIGUSR1 e SIGUSR2.
 ## Bonus
 
 Aggiungere un sistema di conferma di ricezione.
-Supportare caratteri Unicode.
+Il progetto bonus dovrá a che supportare caratteri Unicode.
 Per realizzare la parte bonus sará fondamentale conoscere le differenze tra *sigaction* e *signal*
 
 Eccone alcune delle piu significative:
