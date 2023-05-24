@@ -6,7 +6,7 @@
 /*   By: afabbri <afabbri@student.42roma.it>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 12:13:19 by afabbri           #+#    #+#             */
-/*   Updated: 2023/05/24 10:45:02 by afabbri          ###   ########.fr       */
+/*   Updated: 2023/05/24 14:01:18 by afabbri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,7 @@
 void	confirm_msg(int signal)
 {
 	if (signal == SIGUSR2)
-		ft_printf("maria, il signor gianni, ha accettato l'invito\n");
+		ft_printf("Maria, il signor Gianni, ha accettato l'invito\n");
 }
 
 void	ft_atob(int pid, char c)
@@ -48,6 +48,8 @@ int	main(int argc, char **argv)
 			ft_atob(pid, argv[2][i]);
 			i++;
 		}
+		signal(SIGUSR2, confirm_msg);
+		ft_atob(pid, '\0');
 	}
 	else
 	{

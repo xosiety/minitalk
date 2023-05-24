@@ -6,7 +6,7 @@
 /*   By: afabbri <afabbri@student.42roma.it>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 11:52:44 by afabbri           #+#    #+#             */
-/*   Updated: 2023/05/24 10:49:59 by afabbri          ###   ########.fr       */
+/*   Updated: 2023/05/24 13:54:16 by afabbri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -44,7 +44,7 @@ int	main(int argc, char **argv)
 	}
 	pid = getpid();
 	ft_printf("%d\n", pid);
-		act.sa_sigaction = ft_btoa;
+	act.sa_sigaction = ft_btoa;
 	sigemptyset(&act.sa_mask);
 	act.sa_flags = 0;
 	while (argc == 1)
@@ -53,5 +53,6 @@ int	main(int argc, char **argv)
 		sigaction(SIGUSR2, &act, NULL);
 		pause();
 	}
+	ft_putchar_fd('\n', 1);
 	return (0);
 }
