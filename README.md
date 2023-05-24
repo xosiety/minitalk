@@ -78,15 +78,15 @@ int main() {
 
 Nell'esempio sopra, vengono definiti due signal handler: `sigusr1_handler()` per SIGUSR1 e `sigusr2_handler()` per SIGUSR2. Questi signal handler vengono quindi associati ai segnali corrispondenti utilizzando `signal(SIGUSR1, sigusr1_handler)` e `signal(SIGUSR2, sigusr2_handler)`.
 
-Il programma entra quindi in un ciclo while che esegue le azioni del programma principale. Nel frattempo, se il processo riceve SIGUSR1 o SIGUSR2, verranno eseguiti i rispettivi signal handler.
+Il programma entra quindi in un ciclo while che esegue le azioni principali. Nel frattempo, se il processo riceve SIGUSR1 o SIGUSR2, verranno eseguiti i rispettivi signal handler.
 
 ## ⏭️ Bonus
 
-Aggiungere un sistema di conferma di ricezione.
-Il progetto bonus dovrá a che supportare caratteri Unicode.
-Per realizzare la parte bonus sará fondamentale conoscere le differenze tra *sigaction* e *signal*
+Per quel che riguarda la parte bonus andremo ad aggiungere una funzione di conferma di ricezione.
+Il progetto bonus dovrá supportare anche caratteri Unicode. 
+Sará fondamentale conoscere le differenze tra *sigaction* e *signal*
 
-Ecco una altra tabella che evidenzia le differenze tra `signal` e `sigaction`:
+Ecco una tabella che evidenzia le differenze tra `signal` e `sigaction`:
 
 | Caratteristica                                                              | `signal`                                    | `sigaction`                                                                                                                    |
 |-----------------------------------------------------------------------------|---------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------|
