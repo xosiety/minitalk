@@ -3,9 +3,9 @@
 
 <!-- TOC -->
 * [Minitalk](#minitalk)
+* [Introduzione](#introduzione)
   * [Mandatory part](#mandatory-part)
   * [Bonus](#bonus)
-* [Introduzione](#introduzione)
   * [Esempio di utilizzo di sigaction](#esempio-di-utilizzo-di-sigaction)
 <!-- TOC -->
 
@@ -33,8 +33,52 @@ Ecco un riassunto delle funzioni permesse all'interno del progetto con i relativ
 ## Mandatory part
 
 Produrre eseguibili per il server e il client.
-Il client deve comunicare una stringa passata come parametro al server (identificato dal suo ID di processo), che la visualizza successivamente.
-Utilizzare solo i segnali SIGUSR1 e SIGUSR2.
+
+Il client deve comunicare una stringa passata come parametro al server (identificato dal suo ID di processo), che la visualizza successivamente utilizzando solo i segnali SIGUSR1 e SIGUSR2.
+
+In Unix, i segnali sono meccanismi utilizzati per comunicare con i processi. I segnali sono eventi asincroni che possono essere generati dal kernel del sistema operativo, da altri processi o anche da un processo stesso. Ogni segnale ha un numero di identificazione univoco associato ad esso.
+
+I segnali SIGUSR1 e SIGUSR2 sono segnali definiti dall'utente (User-Defined Signals). Questi segnali sono generalmente utilizzati come meccanismi di comunicazione tra processi o per inviare notifiche personalizzate.
+
+Quando un processo riceve un segnale, può scegliere di gestirlo o ignorarlo. Per gestire un segnale, un processo deve definire un gestore di segnali (signal handler). Un signal handler è una funzione che viene eseguita quando il processo riceve un determinato segnale. Per impostare un signal handler per un segnale specifico, il processo utilizza la funzione di libreria `signal()`.
+
+Ecco un esempio di codice che mostra come impostare e gestire i segnali SIGUSR1 e SIGUSR2 in C utilizzando la funzione `signal()`:
+
+```c
+#include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
+
+// Signal handler per SIGUSR1
+void sigusr1_handler(int signum) {
+    printf("Ricevuto SIGUSR1\n");
+    // Esegui le azioni desiderate
+}
+
+// Signal handler per SIGUSR2
+void sigusr2_handler(int signum) {
+    printf("Ricevuto SIGUSR2\n");
+    // Esegui le azioni desiderate
+}
+
+int main() {
+    // Imposta i signal handler per SIGUSR1 e SIGUSR2
+    signal(SIGUSR1, sigusr1_handler);
+    signal(SIGUSR2, sigusr2_handler);
+
+    // Esegui il programma
+    while(1) {
+        // Esegui le azioni del programma
+        sleep(1);
+    }
+
+    return 0;
+}
+```
+
+Nell'esempio sopra, vengono definiti due signal handler: `sigusr1_handler()` per SIGUSR1 e `sigusr2_handler()` per SIGUSR2. Questi signal handler vengono quindi associati ai segnali corrispondenti utilizzando `signal(SIGUSR1, sigusr1_handler)` e `signal(SIGUSR2, sigusr2_handler)`.
+
+Il programma entra quindi in un ciclo while che esegue le azioni del programma principale. Nel frattempo, se il processo riceve SIGUSR1 o SIGUSR2, verranno eseguiti i rispettivi signal handler.
 
 ## Bonus
 
@@ -66,8 +110,6 @@ Ecco una altra tabella che mostra le differenze tra `signal` e `sigaction`:
 È importante notare che le differenze possono variare a seconda del sistema operativo e delle implementazioni specifiche.
 
 ## Esempio di utilizzo di sigaction
-
-Ecco una spiegazione dettagliata su come utilizzare sigaction:
 
     #include <stdio.h>
     #include <stdlib.h>
