@@ -26,7 +26,8 @@ Ecco un riassunto delle funzioni permesse all'interno del progetto con i relativ
 | [`kill`](https://man7.org/linux/man-pages/man2/kill.2.html)                         | La funzione `kill` viene utilizzata per inviare un segnale a un processo specificato da un ID di processo. Può essere utilizzata per inviare segnali di terminazione o per interagire con altri processi.                                                                   |
 | [`sleep`](https://man7.org/linux/man-pages/man3/sleep.3.html)                       | La funzione `sleep` sospende l'esecuzione di un programma per un numero specificato di secondi. È utile per introdurre un ritardo nell'esecuzione di un programma o per attendere un certo periodo di tempo.                                                                |
 | [`usleep`](https://man7.org/linux/man-pages/man3/usleep.3.html)                     | La funzione `usleep` sospende l'esecuzione di un programma per un numero specificato di microsecondi. Funziona in modo simile alla funzione `sleep`, ma accetta una frazione di secondo più piccola come argomento.                                                         |                                                                                                                                                                  
-| [`exit`](https://man7.org/linux/man-pages/man3/exit.3.html)                         | La funzione `exit` viene utilizzata per terminare l'esecuzione di un programma in modo volontario. Può anche essere utilizzata per restituire un codice di stato al sistema operativo.                                                                                      |
+| [`exit`](https://man7.org/linux/man-pages/man3/exit.3.html)                         | La funzione `exit` viene utilizzata per terminare l'esecuzione di un programma in modo volontario. Può anche essere utilizzata per restituire un codice di stato al sistema operativo.                                                                                    
+# Introduzione  |
 
 ## Mandatory part
 
@@ -38,10 +39,9 @@ Utilizzare solo i segnali SIGUSR1 e SIGUSR2.
 
 Aggiungere un sistema di conferma di ricezione.
 Supportare caratteri Unicode.
+Per realizzare la parte bonus sará fondamentale conoscere le differenze tra *sigaction* e *signal*
 
-# Introduzione
-
-Ci sono alcune differenze significative tra *sigaction* e *signal*:
+Eccone alcune delle piu significative:
 
 *Gestione dei segnali multipli*: signal ha una gestione semplice dei segnali, il che significa che quando viene chiamato per un segnale specifico, il gestore di segnali predefinito viene sostituito con il nuovo gestore specificato. Questo significa che non è possibile gestire separatamente i segnali multipli. Al contrario, sigaction consente di specificare un gestore di segnali separato per ciascun segnale e fornisce maggiore flessibilità nella gestione dei segnali multipli.
 
