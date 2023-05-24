@@ -6,7 +6,7 @@
 /*   By: afabbri <afabbri@student.42roma.it>        +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/05/23 11:52:44 by afabbri           #+#    #+#             */
-/*   Updated: 2023/05/24 10:45:16 by afabbri          ###   ########.fr       */
+/*   Updated: 2023/05/24 10:49:59 by afabbri          ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,7 @@ void	ft_btoa(int sig, siginfo_t *info, void *context)
 	static int	bit;
 	static int	i;
 
+	(void)context;
 	if (sig == SIGUSR1)
 		i |= (0x01 << bit);
 	bit++;
