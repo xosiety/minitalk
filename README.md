@@ -1,10 +1,14 @@
 
 # 📖 Minitalk
 
+small data exchange program using UNIX signals.
+
 <!-- TOC -->
 * [📖 Minitalk](#-minitalk)
 * [💡 Introduzione](#-introduzione)
   * [📝 Mandatory part](#-mandatory-part)
+  * [Server](#server)
+  * [Client](#client)
   * [⏭️ Bonus](#-bonus)
 * [🛠️ Sigaction](#-sigaction)
 <!-- TOC -->
@@ -80,12 +84,223 @@ Nell'esempio sopra, vengono definiti due signal handler: `sigusr1_handler()` per
 
 Il programma entra quindi in un ciclo while che esegue le azioni principali. Nel frattempo, se il processo riceve SIGUSR1 o SIGUSR2, verranno eseguiti i rispettivi signal handler.
 
+## Server 
+
+```c
+void ft_btoa(int sig, siginfo_t *info, void *context)
+{
+	static int bit;
+	static int i;
+
+	(void)context; // Ignora il parametro non utilizzato per evitare un warning del compilatore
+
+	if (sig == SIGUSR1)
+		i |= (0x01 << bit); // Imposta il bit corrente a 1
+	bit++;
+
+	if (bit == 8)
+	{
+		if (i == 0)
+			kill(info->si_pid, SIGUSR2); // Invia un segnale SIGUSR2 come conferma
+		ft_printf("%c", i); // Stampa il carattere corrispondente al valore intero i
+		bit = 0;
+		i = 0;
+	}
+}
+```
+
+- `static int bit;`: Viene dichiarata una variabile `bit` di tipo intero in modo che il suo valore persista tra le chiamate alla funzione. Questa variabile tiene traccia del bit corrente nel processo destinatario.
+
+- `static int i;`: Viene dichiarata una variabile `i` di tipo intero, anch'essa statica, che rappresenta il valore intero del carattere in fase di costruzione.
+
+- `(void)context;`: Questa riga viene utilizzata per evitare un warning del compilatore riguardante il parametro `context` non utilizzato. Ignora il parametro senza effettuare alcuna operazione.
+
+- `if (sig == SIGUSR1)`: Controlla se il segnale ricevuto è `SIGUSR1`. Questo indica che il bit corrente nel messaggio è 1.
+
+- `i |= (0x01 << bit);`: Utilizzando l'operatore OR bit a bit con l'operazione di shift a sinistra, viene impostato il bit corrente di `i` a 1.
+
+- `bit++;`: Incrementa il valore di `bit` per passare al bit successivo nel messaggio.
+
+- `if (bit == 8)`: Controlla se sono stati processati tutti gli 8 bit del carattere.
+
+- `if (i == 0)`: Verifica se il valore di `i` è 0, il che indica che il carattere corrente è un carattere null.
+
+- `kill(info->si_pid, SIGUSR2);`: Invia un segnale `SIGUSR2` al processo mittente come conferma di ricezione del messaggio.
+
+- `ft_printf("%c", i);`: Stampa il carattere corrispondente al valore intero `i`.
+
+- `bit = 0;`: Reimposta il valore di `bit` a 0 per processare il prossimo carattere.
+
+- `i = 0;`: Reimposta il valore di `i` a 0 per iniziare a costruire il prossimo carattere.
+
+il seguente codice riceve i segnali inviati dal mittente e li converte in un messaggio binario leggibile.
+
+```c
+int main(int argc, char **argv)
+{
+	int pid;
+	struct sigaction act;
+
+	(void)argv; // Ignora il parametro non utilizzato per evitare un warning del compilatore
+
+	if (argc != 1)
+	{
+		ft_printf("Error\n");
+		return (1);
+	}
+
+	pid = getpid(); // Ottiene il PID del processo destinatario
+	ft_printf("%d\n", pid); // Stampa il PID
+
+	act.sa_sigaction = ft_btoa; // Imposta il signal handler personalizzato ft_btoa
+	sigemptyset(&act.sa_mask); // Inizializza il set di segnali vuoto
+	act.sa_flags = 0;
+
+	while (argc == 1)
+	{
+		sigaction(SIGUSR1, &act, NULL); // Imposta il signal handler per SIGUSR1
+		sigaction(SIGUSR2, &act, NULL); // Imposta il signal handler per SIGUSR2
+		pause(); // Sospende il processo fino alla ricezione di un segnale
+	}
+
+	ft_putchar_fd('\n', 1); // Stampa una nuova riga
+	return (0);
+}
+```
+
+- `struct sigaction act;`: Viene dichiarata una variabile di tipo `struct sigaction` per impostare il comportamento dei signal handler.
+
+- `(void)argv;`: Questa riga viene utilizzata per evitare un warning del compilatore riguardante il parametro `argv` non utilizzato. Ignora il parametro senza effettuare alcuna operazione.
+
+- `if (argc != 1)`: Verifica se ci sono argomenti extra passati al programma. Se sì, viene stampato un messaggio di errore e il programma termina con un codice di uscita 1.
+
+- `pid = getpid();`: Utilizza la funzione `getpid()` per ottenere il PID (Process ID) del processo destinatario.
+
+- `ft_printf("%d\n", pid);`: Stampa il PID del processo destinatario seguito da una nuova riga.
+
+- `act.sa_sigaction = ft_btoa;`: Imposta il signal handler personalizzato `ft_btoa` nella struttura `act.sa_sigaction`.
+
+- `sigemptyset(&act.sa_mask);`: Inizializza il set di segnali vuoto nella struttura `act.sa_mask`. Questo indica che non ci sono segnali che devono essere bloccati durante l'esecuzione del signal handler.
+
+- `act.sa_flags = 0;`: Imposta i flag di `act` a 0. Non vengono utilizzati flag aggiuntivi.
+
+- `while (argc == 1)`: Entra in un ciclo che si ripete finché `argc` è uguale a 1, il che significa che non sono stati passati argomenti extra al programma.
+
+- `sigaction(SIGUSR1, &act, NULL);`: Imposta il signal handler `ft_btoa` per il segnale `SIGUSR1` utilizzando la chiamata di sistema `sigaction()`.
+
+- `sigaction(SIGUSR2, &act, NULL);`: Imposta il signal handler `ft_btoa` per il segnale `SIGUSR2` utilizzando la chiamata di sistema `sigaction()`.
+
+- `pause();`: Sospende l'esecuzione del processo fino a quando non viene ricevuto un segnale. Quando viene ricevuto un segnale, il signal handler `ft_btoa` viene chiamato per gestirlo.
+
+- `ft_putchar_fd('\n', 1);`: Stampa una nuova riga dopo che il ciclo `while` è terminato.
+
+- `return (0);`: Termina il programma con un codice di uscita 0, indicando che il programma è stato eseguito correttamente.
+
+## Client
+
+La funzione `ft_atob` viene utilizzata per convertire un carattere in binario e inviare i segnali corrispondenti al processo destinatario identificato dal PID fornito.
+
+```c
+void ft_atob(int pid, char c)
+{
+	int bit;
+
+	bit = 0;
+	while (bit < 8)
+	{
+		if ((c & (0x01 << bit)))
+			kill(pid, SIGUSR1); // Invia il segnale SIGUSR1 al processo destinatario se il bit corrente è 1
+		else
+			kill(pid, SIGUSR2); // Invia il segnale SIGUSR2 al processo destinatario se il bit corrente è 0
+		usleep(500); // Attende per un breve periodo di tempo (500 microsecondi) prima di inviare il segnale successivo
+		bit++;
+	}
+}
+```
+
+- `bit = 0;`: Inizializza la variabile `bit` a 0, che rappresenterà la posizione del bit corrente durante la conversione in binario.
+
+- `while (bit < 8)`: Itera finché il bit corrente è inferiore a 8, rappresentando i 8 bit del carattere.
+
+- `if ((c & (0x01 << bit)))`: Controlla se il bit corrente del carattere è 1. Utilizzando l'operatore di bitwise AND (`&`) tra `c` e un valore che ha un bit impostato nella posizione corrente (`0x01 << bit`), si verifica se il bit è 1.
+
+- `kill(pid, SIGUSR1);`: Se il bit corrente è 1, viene inviato il segnale `SIGUSR1` al processo destinatario identificato dal PID fornito.
+
+- `else`: Altrimenti, se il bit corrente è 0.
+
+- `kill(pid, SIGUSR2);`: Viene inviato il segnale `SIGUSR2` al processo destinatario identificato dal PID fornito.
+
+- `usleep(500);`: Aggiunge una breve pausa di 500 microsecondi prima di inviare il segnale successivo. Questo serve a garantire che il processo destinatario abbia il tempo di gestire il segnale prima di riceverne un altro.
+
+- `bit++;`: Incrementa il valore di `bit` per passare al bit successivo durante la conversione in binario.
+
+In sintesi, la funzione `ft_atob` invia una sequenza di segnali `SIGUSR1` o `SIGUSR2` al processo destinatario per rappresentare i bit del carattere fornito.
+
+Il programma mittente, invece, invia un messaggio binario al processo server utilizzando i segnali UNIX.
+
+```c
+int main(int argc, char **argv)
+{
+	int pid;
+	int i;
+
+	i = 0;
+
+	if (argc == 3)
+	{
+		pid = ft_atoi(argv[1]); // Converte il secondo argomento in un intero (PID del processo destinatario)
+		while (argv[2][i] != '\0')
+		{
+			ft_atob(pid, argv[2][i]); // Converte il carattere in binario e invia i segnali corrispondenti al processo destinatario
+			i++;
+		}
+		signal(SIGUSR2, confirm_msg); // Imposta il signal handler per SIGUSR2 per confermare la ricezione del messaggio
+		ft_atob(pid, '\0'); // Invia un carattere nullo come fine del messaggio
+	}
+	else
+	{
+		ft_printf("Error\n");
+		return (1);
+	}
+
+	return (0);
+}
+```
+
+- `if (argc == 3)`: Controlla se ci sono esattamente tre argomenti passati al programma, il che indica che è stato fornito il PID del processo destinatario e il messaggio da inviare.
+
+- `pid = ft_atoi(argv[1]);`: Converte il secondo argomento passato (argv[1]) in un intero utilizzando la funzione `ft_atoi` e lo assegna alla variabile `pid`. Questo rappresenta il PID del processo destinatario.
+
+- `while (argv[2][i] != '\0')`: Itera attraverso i caratteri del messaggio (argv[2]) fino a quando non viene raggiunto il carattere di fine stringa ('\0').
+
+- `ft_atob(pid, argv[2][i]);`: Invoca la funzione `ft_atob` per convertire il carattere in binario e inviare i segnali corrispondenti al processo destinatario identificato dal PID.
+
+- `signal(SIGUSR2, confirm_msg);`: Imposta il signal handler `confirm_msg` per il segnale `SIGUSR2`. Questo signal handler viene chiamato quando il processo destinatario invia il segnale `SIGUSR2` come conferma di ricezione del messaggio.
+
+- `ft_atob(pid, '\0');`: Invia un carattere nullo ('\0') come fine del messaggio per indicare al processo destinatario che il messaggio è completo.
+
+- `else`: Viene eseguito se il numero di argomenti non è corretto (diverso da 3). Viene stampato un messaggio di errore e il programma termina con un codice di uscita 1.
+
+- `return (0);`: Termina il programma con un codice di uscita 0, indicando che il programma è stato eseguito correttamente.
+
+
 ## ⏭️ Bonus
 
-Per quel che riguarda la parte bonus andremo ad aggiungere una funzione di conferma di ricezione.
-Il progetto bonus dovrá supportare anche caratteri Unicode. 
-Sará fondamentale conoscere le differenze tra *sigaction* e *signal*
+Per quel che riguarda la parte bonus andremo ad aggiungere una conferma di ricezione.
 
+```c
+void confirm_msg(int signal)
+{
+	if (signal == SIGUSR2)
+		ft_printf("Message Received\n");
+}
+```
+
+La funzione `confirm_msg` è un signal handler che viene chiamato quando il processo destinatario riceve un segnale `SIGUSR2`. Se il segnale ricevuto corrisponde a `SIGUSR2`, viene stampato un messaggio che indica che il messaggio è stato ricevuto con successo.
+
+Il progetto bonus dovra' supportare anche caratteri Unicode. 
+
+Sara' fondamentale conoscere le differenze tra *sigaction* e *signal*
 Ecco una tabella che evidenzia le differenze tra `signal` e `sigaction`:
 
 | Caratteristica                                                              | `signal`                                    | `sigaction`                                                                                                                    |
@@ -101,42 +316,28 @@ Ecco una tabella che evidenzia le differenze tra `signal` e `sigaction`:
 
 # 🛠️ Sigaction
 
-    #include <stdio.h>
-    #include <stdlib.h>
-    #include <signal.h>
+La funzione `sigaction` viene utilizzata per gestire i segnali in un programma UNIX. Essa permette di modificare il comportamento predefinito di un segnale quando viene ricevuto.
 
-    void signalHandler(int signal) {
-        printf("Ricevuto segnale %d\n", signal);
-    // Azioni da eseguire in risposta al segnale ricevuto
-    }
+La sua dichiarazione è la seguente:
 
-    int main() {
-        struct sigaction sa;
-        sa.sa_handler = signalHandler;  // Imposta il gestore di segnali personalizzato
-        sigemptyset(&sa.sa_mask);       // Svuota l'insieme di segnali bloccati durante l'esecuzione del gestore
-        sa.sa_flags = 0;                // Nessuna opzione aggiuntiva
+```c
+int sigaction(int signum, const struct sigaction *act, struct sigaction *oldact);
+```
 
-    // Installa il gestore di segnali personalizzato per il segnale specifico
-    if (sigaction(SIGINT, &sa, NULL) == -1) {
-        perror("Errore nell'installazione del gestore di segnali");
-        exit(EXIT_FAILURE);
-    }
+- `signum`: È il numero del segnale che si desidera gestire. Può essere un valore costante come `SIGUSR1` o `SIGUSR2`, che rappresentano segnali utente definiti dall'utente.
 
-    // Resto del codice del programma
+- `act`: È un puntatore a una struttura `struct sigaction` che specifica l'azione da associare al segnale `signum`. La struttura `struct sigaction` ha i seguenti campi principali:
+    - `void (*sa_handler)(int)`: Il puntatore a una funzione che viene eseguita quando il segnale viene ricevuto. Può essere specificato come `SIG_DFL` per ripristinare il comportamento predefinito del segnale o `SIG_IGN` per ignorare il segnale.
+    - `void (*sa_sigaction)(int, siginfo_t *, void *)`: Opzionale. Il puntatore a una funzione con una firma più estesa che può ricevere informazioni aggiuntive sul segnale tramite la struttura `siginfo_t`.
+    - `sigset_t sa_mask`: Un insieme di segnali che vengono bloccati durante l'esecuzione della funzione di gestione del segnale.
+    - `int sa_flags`: Opzioni per personalizzare il comportamento della gestione del segnale, come `SA_RESTART` per riavviare le chiamate di sistema interrotte dal segnale.
 
-    return 0;
-    }
+- `oldact`: È un puntatore a una struttura `struct sigaction` che può contenere informazioni sull'azione precedente associata al segnale.
 
-Nell'esempio sopra, signalHandler è una funzione definita dall'utente che viene eseguita quando il segnale specificato (SIGINT nel caso sopra) viene ricevuto dal processo.
+La funzione `sigaction` restituisce 0 in caso di successo e -1 in caso di errore.
 
-La struttura struct sigaction viene utilizzata per configurare il comportamento di sigaction. Puoi impostare sa_handler con il puntatore alla funzione che gestirà il segnale. 
+Quando un segnale viene ricevuto e associato a un'azione tramite `sigaction`, la funzione o il gestore specificato viene chiamato, consentendo di eseguire un'azione personalizzata o di gestire il segnale in modo diverso rispetto al comportamento predefinito.
 
-L'insieme sa_mask può essere utilizzato per specificare un insieme di segnali che devono essere bloccati durante l'esecuzione del gestore del segnale. sa_flags può essere utilizzato per specificare opzioni aggiuntive, se necessario.
+In sintesi, `sigaction` consente di definire una funzione di gestione personalizzata per un segnale specifico, consentendo di controllare il comportamento del programma quando tale segnale viene ricevuto.
 
-Nel nostro esempio, viene utilizzata la funzione sigemptyset per svuotare l'insieme dei segnali bloccati durante l'esecuzione. 
-
-Infine, la funzione sigaction viene chiamata per installare il gestore di segnali personalizzato (signalHandler) per il segnale specificato (SIGINT). 
-Se l'installazione fallisce, verrà restituito -1 e verrà stampato un messaggio di errore.
-
-Dopo l'installazione del gestore di segnali, il programma può continuare con il resto del suo codice. Quando il segnale specificato viene ricevuto, la funzione signalHandler verrà chiamata, consentendo di eseguire le azioni desiderate in risposta al segnale.
-
+  
