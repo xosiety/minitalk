@@ -15,7 +15,7 @@
 void	confirm_msg(int signal)
 {
 	if (signal == SIGUSR2)
-		ft_printf("Maria, il signor Gianni, ha accettato l'invito\n");
+		ft_printf("Message Recieved\n");
 }
 
 void	ft_atob(int pid, char c)
