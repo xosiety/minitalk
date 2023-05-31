@@ -53,6 +53,4 @@ int	main(int argc, char **argv)
 		sigaction(SIGUSR2, &act, NULL);
 		pause();
 	}
-	ft_putchar_fd('\n', 1);
-	return (0);
 }

@@ -14,8 +14,8 @@
 
 void	confirm_msg(int signal)
 {
-	if (signal == SIGUSR2)
-		ft_printf("Message Recieved\n");
+    if (signal == SIGUSR2)
+        ft_printf("Message Recieved\n");
 }
 
 void	ft_atob(int pid, char c)
@@ -49,12 +49,11 @@ int	main(int argc, char **argv)
 			i++;
 		}
 		signal(SIGUSR2, confirm_msg);
-		ft_atob(pid, '\0');
+		ft_atob(pid, '\n');
 	}
 	else
 	{
 		ft_printf("Error\n");
 		return (1);
 	}
-	return (0);
 }
