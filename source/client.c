@@ -49,7 +49,8 @@ int	main(int argc, char **argv)
 			i++;
 		}
 		signal(SIGUSR2, confirm_msg);
-		ft_atob(pid, '\n');
+        ft_atob(pid, '\0');
+        ft_atob(pid, '\n');
 	}
 	else
 	{
