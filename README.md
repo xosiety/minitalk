@@ -1,38 +1,45 @@
 
 # 📖 Minitalk
 
-small data exchange program using UNIX signals.
+A small data exchange program using UNIX signals.
 
 <!-- TOC -->
-* [📖 Minitalk](#-minitalk)
 * [💡 Introduzione](#-introduzione)
+  * [🔭 Risorse utili](#-risorse-utili)
   * [📝 Mandatory part](#-mandatory-part)
-  * [Server](#server)
-  * [Client](#client)
+    * [📤 Client](#-client)
+    * [📥 Server](#-server)
   * [⏭️ Bonus](#-bonus)
 * [🛠️ Sigaction](#-sigaction)
 <!-- TOC -->
-
 # 💡 Introduzione
 
 L'obiettivo del progetto è creare un sistema di trasmissione di messaggi semplice ma funzionale utilizzando i segnali Unix come mezzo di comunicazione. Il mittente invia un messaggio al destinatario convertendo il messaggio in sequenze di segnali.
 
-Ecco un riassunto delle funzioni permesse all'interno del progetto con i relativi link al manuale.
+| Link al manuale                                                                     | Funzioni permesse                                                                                                                                                                                                                                           |
+|-------------------------------------------------------------------------------------|-------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| [`signal`](https://man7.org/linux/man-pages/man2/signal.2.html)                     | La funzione `signal` viene utilizzata per impostare il comportamento di un programma in risposta a segnali specifici inviati dal sistema operativo o da altri processi. Prende come argomenti il segnale da gestire e il gestore di segnale personalizzato. |
+| [`sigemptyset & sigaddset`](https://man7.org/linux/man-pages/man3/sigsetops.3.html) | Le funzioni `sigemptyset` e `sigaddset` sono utilizzate per inizializzare e modificare un insieme di segnali. `sigemptyset` svuota un insieme di segnali, mentre `sigaddset` aggiunge un segnale all'insieme.                                               |
+| [`sigaction`](https://man7.org/linux/man-pages/man2/sigaction.2.html)               | La funzione `sigaction` viene utilizzata per impostare il comportamento di un programma in risposta a segnali specifici. Consente di specificare un gestore di segnale personalizzato e altre opzioni per la gestione dei segnali.                          |
+| [`pause`](https://man7.org/linux/man-pages/man2/pause.2.html)                       | La funzione `pause` sospende l'esecuzione di un programma fino a quando non viene ricevuto un segnale. Viene comunemente utilizzata per bloccare un processo fino a quando non viene ricevuto un segnale di terminazione o un altro segnale specificato.    |
+| [`kill`](https://man7.org/linux/man-pages/man2/kill.2.html)                         | La funzione `kill` viene utilizzata per inviare un segnale a un processo specificato da un ID. Può essere utilizzata per inviare segnali di terminazione o per interagire con altri processi.                                                               | 
+| [`exit`](https://man7.org/linux/man-pages/man3/exit.3.html)                         | La funzione `exit` viene utilizzata per terminare l'esecuzione di un programma in modo volontario. Può anche essere utilizzata per restituire un codice di stato al sistema operativo.                                                                      |
 
-| Funzione                                                                            | Riassunto                                                                                                                                                                                                                                                                   |
-|-------------------------------------------------------------------------------------|-----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| [`malloc`](https://man7.org/linux/man-pages/man3/free.3.html)                       | La funzione `malloc` viene utilizzata in C per allocare memoria dinamicamente durante l'esecuzione di un programma. Prende come argomento la dimensione in byte della memoria richiesta e restituisce un puntatore alla memoria allocata.                                   |
-| [`free`](https://man7.org/linux/man-pages/man3/free.3.html)                         | La funzione `free` viene utilizzata per liberare la memoria precedentemente allocata tramite `malloc` o altre funzioni di allocazione della memoria. Libera la memoria specificata dal puntatore passato come argomento, consentendo al sistema operativo di riutilizzarla. |
-| [`write`](https://man7.org/linux/man-pages/man2/write.2.html)                       | La funzione `write` consente di scrivere dati in un file o in un descrittore di file. Prende come argomenti il descrittore di file, il buffer dei dati e la dimensione dei dati da scrivere. Restituisce il numero di byte scritti o -1 in caso di errore.                  |
-| [`getpid`](https://man7.org/linux/man-pages/man2/getpid.2.html)                     | La funzione `getpid` restituisce l'ID del processo chiamante. L'ID del processo è un numero univoco assegnato dal sistema operativo a ogni processo in esecuzione nel sistema.                                                                                              |
-| [`signal`](https://man7.org/linux/man-pages/man2/signal.2.html)                     | La funzione `signal` viene utilizzata per impostare il comportamento di un programma in risposta a segnali specifici inviati dal sistema operativo o da altri processi. Prende come argomenti il segnale da gestire e il gestore di segnale personalizzato.                 |
-| [`sigemptyset & sigaddset`](https://man7.org/linux/man-pages/man3/sigsetops.3.html) | Le funzioni `sigemptyset` e `sigaddset` sono utilizzate per inizializzare e modificare un insieme di segnali. `sigemptyset` svuota un insieme di segnali, mentre `sigaddset` aggiunge un segnale all'insieme.                                                               |
-| [`sigaction`](https://man7.org/linux/man-pages/man2/sigaction.2.html)               | La funzione `sigaction` viene utilizzata per impostare il comportamento di un programma in risposta a segnali specifici. Consente di specificare un gestore di segnale personalizzato e altre opzioni per la gestione dei segnali.                                          |
-| [`pause`](https://man7.org/linux/man-pages/man2/pause.2.html)                       | La funzione `pause` sospende l'esecuzione di un programma fino a quando non viene ricevuto un segnale. Viene comunemente utilizzata per bloccare un processo fino a quando non viene ricevuto un segnale di terminazione o un altro segnale specificato.                    |
-| [`kill`](https://man7.org/linux/man-pages/man2/kill.2.html)                         | La funzione `kill` viene utilizzata per inviare un segnale a un processo specificato da un ID. Può essere utilizzata per inviare segnali di terminazione o per interagire con altri processi.                                                                   |
-| [`sleep`](https://man7.org/linux/man-pages/man3/sleep.3.html)                       | La funzione `sleep` sospende l'esecuzione di un programma per un numero specificato di secondi. È utile per introdurre un ritardo nell'esecuzione di un programma o per attendere un certo periodo di tempo.                                                                |
-| [`usleep`](https://man7.org/linux/man-pages/man3/usleep.3.html)                     | La funzione `usleep` sospende l'esecuzione di un programma per un numero specificato di microsecondi. Funziona in modo simile alla funzione `sleep`, ma accetta una frazione di secondo più piccola come argomento.                                                         |                                                                                                                                                                  
-| [`exit`](https://man7.org/linux/man-pages/man3/exit.3.html)                         | La funzione `exit` viene utilizzata per terminare l'esecuzione di un programma in modo volontario. Può anche essere utilizzata per restituire un codice di stato al sistema operativo.                                                                                   
+## 🔭 Risorse utili
+
+1. [Inter-Process Communication (IPC)](https://www.geeksforgeeks.org/inter-process-communication-ipc/?ref=lbp): Questo articolo introduce l'IPC, che è un meccanismo di comunicazione tra processi in un sistema operativo. Vengono presentati diversi metodi di IPC, come pipe, socket, memoria condivisa e code dei messaggi.
+
+2. [signal(7) - Linux manual page](https://www.man7.org/linux/man-pages/man7/signal.7.html): Questa pagina del manuale di Linux spiega il concetto di segnali in Unix e come vengono gestiti. Vengono forniti dettagli sulle diverse funzioni di gestione dei segnali, come `signal` e `sigaction`, e sulle costanti dei segnali comuni.
+
+3. [Signal (IPC) - Wikipedia](https://en.wikipedia.org/wiki/Signal_(IPC)): Questa pagina di Wikipedia approfondisce il concetto di segnali in ambito di IPC. Vengono fornite informazioni sulle origini e sulle caratteristiche dei segnali Unix, oltre a esempi di come vengono utilizzati per la comunicazione tra processi.
+
+4. [sigaction - Unix System Calls](https://www.tutorialspoint.com/unix_system_calls/sigaction.htm): Questo tutorialspoint spiega la funzione `sigaction` in dettaglio. Vengono forniti esempi di codice e una spiegazione delle varie opzioni e argomenti che possono essere utilizzati con `sigaction`.
+
+5. [Signals and Signal Handling](https://people.kth.se/~johanmon/ose/assignments/signals.pdf): Questo documento fornisce una panoramica completa dei segnali Unix e della loro gestione. Vengono spiegate le diverse azioni possibili per i segnali, come l'ignorazione, la gestione personalizzata e il ripristino del comportamento predefinito.
+
+6. [The Open Group Base Specifications - sigaction](https://pubs.opengroup.org/onlinepubs/007904875/functions/sigaction.html): Questo documento fa parte delle specifiche di base del gruppo Open e spiega la funzione `sigaction` secondo gli standard Unix. Vengono forniti dettagli sulla struttura `struct sigaction` e sull'utilizzo dei flag e degli argomenti correlati.
+
+7. [What is the difference between sigaction and signal?](https://stackoverflow.com/questions/231912/what-is-the-difference-between-sigaction-and-signal): Questa discussione su Stack Overflow fornisce una spiegazione sulle differenze tra `sigaction` e `signal`. Viene spiegato perché `sigaction` è generalmente preferito rispetto a `signal` per la gestione dei segnali.
 
 ## 📝 Mandatory part
 
@@ -84,7 +91,99 @@ Nell'esempio sopra, vengono definiti due signal handler: `sigusr1_handler()` per
 
 Il programma entra quindi in un ciclo while che esegue le azioni principali. Nel frattempo, se il processo riceve SIGUSR1 o SIGUSR2, verranno eseguiti i rispettivi signal handler.
 
-## Server 
+### 📤 Client
+
+Il client deve comunicare una stringa passata come parametro al server (identificato dal suo ID di processo), che la visualizza successivamente utilizzando solo i segnali SIGUSR1 e SIGUSR2.
+
+La funzione `ft_atob` viene utilizzata per convertire un carattere in binario e inviare i segnali corrispondenti al processo destinatario identificato dal PID fornito.
+
+```c
+void ft_atob(int pid, char c)
+{
+	int bit;
+
+	bit = 0;
+	while (bit < 8)
+	{
+		if ((c & (0x01 << bit)))
+			kill(pid, SIGUSR1); // Invia il segnale SIGUSR1 al processo destinatario se il bit corrente è 1
+		else
+			kill(pid, SIGUSR2); // Invia il segnale SIGUSR2 al processo destinatario se il bit corrente è 0
+		usleep(500); // Attende per un breve periodo di tempo (500 microsecondi) prima di inviare il segnale successivo
+		bit++;
+	}
+}
+```
+
+- `bit = 0;`: Inizializza la variabile `bit` a 0, che rappresenterà la posizione del bit corrente durante la conversione in binario.
+
+- `while (bit < 8)`: Itera finché il bit corrente è inferiore a 8, rappresentando i 8 bit del carattere.
+
+- `if ((c & (0x01 << bit)))`: Controlla se il bit corrente del carattere è 1. Utilizzando l'operatore di bitwise AND (`&`) tra `c` e un valore che ha un bit impostato nella posizione corrente (`0x01 << bit`), si verifica se il bit è 1.
+
+- `kill(pid, SIGUSR1);`: Se il bit corrente è 1, viene inviato il segnale `SIGUSR1` al processo destinatario identificato dal PID fornito.
+
+- `else`: Altrimenti, se il bit corrente è 0.
+
+- `kill(pid, SIGUSR2);`: Viene inviato il segnale `SIGUSR2` al processo destinatario identificato dal PID fornito.
+
+- `usleep(500);`: Aggiunge una breve pausa di 500 microsecondi prima di inviare il segnale successivo. Questo serve a garantire che il processo destinatario abbia il tempo di gestire il segnale prima di riceverne un altro.
+
+- `bit++;`: Incrementa il valore di `bit` per passare al bit successivo durante la conversione in binario.
+
+In sintesi, la funzione `ft_atob` invia una sequenza di segnali `SIGUSR1` o `SIGUSR2` al processo destinatario per rappresentare i bit del carattere fornito.
+
+Il programma mittente, invece, invia un messaggio binario al processo server utilizzando i segnali UNIX.
+
+```c
+int main(int argc, char **argv)
+{
+	int pid;
+	int i;
+
+	i = 0;
+
+	if (argc == 3)
+	{
+		pid = ft_atoi(argv[1]); // Converte il secondo argomento in un intero (PID del processo destinatario)
+		while (argv[2][i] != '\0')
+		{
+			ft_atob(pid, argv[2][i]); // Converte il carattere in binario e invia i segnali corrispondenti al processo destinatario
+			i++;
+		}
+		signal(SIGUSR2, confirm_msg); // Imposta il signal handler per SIGUSR2 per confermare la ricezione del messaggio
+		ft_atob(pid, '\0'); // Invia un carattere nullo come fine del messaggio
+	}
+	else
+	{
+		ft_printf("Error\n");
+		return (1);
+	}
+
+	return (0);
+}
+```
+
+- `if (argc == 3)`: Controlla se ci sono esattamente tre argomenti passati al programma, il che indica che è stato fornito il PID del processo destinatario e il messaggio da inviare.
+
+- `pid = ft_atoi(argv[1]);`: Converte il secondo argomento passato (argv[1]) in un intero utilizzando la funzione `ft_atoi` e lo assegna alla variabile `pid`. Questo rappresenta il PID del processo destinatario.
+
+- `while (argv[2][i] != '\0')`: Itera attraverso i caratteri del messaggio (argv[2]) fino a quando non viene raggiunto il carattere di fine stringa ('\0').
+
+- `ft_atob(pid, argv[2][i]);`: Invoca la funzione `ft_atob` per convertire il carattere in binario e inviare i segnali corrispondenti al processo destinatario identificato dal PID.
+
+- `signal(SIGUSR2, confirm_msg);`: Imposta il signal handler `confirm_msg` per il segnale `SIGUSR2`. Questo signal handler viene chiamato quando il processo destinatario invia il segnale `SIGUSR2` come conferma di ricezione del messaggio.
+
+- `ft_atob(pid, '\0');`: Invia un carattere nullo ('\0') come fine del messaggio per indicare al processo destinatario che il messaggio è completo.
+
+- `else`: Viene eseguito se il numero di argomenti non è corretto (diverso da 3). Viene stampato un messaggio di errore e il programma termina con un codice di uscita 1.
+
+- `return (0);`: Termina il programma con un codice di uscita 0, indicando che il programma è stato eseguito correttamente.
+
+
+### 📥 Server 
+
+Il programma server riceve un messaggio binario dal processo mittente e lo converte in caratteri.
 
 ```c
 void ft_btoa(int sig, siginfo_t *info, void *context)
@@ -196,94 +295,6 @@ int main(int argc, char **argv)
 
 - `return (0);`: Termina il programma con un codice di uscita 0, indicando che il programma è stato eseguito correttamente.
 
-## Client
-
-La funzione `ft_atob` viene utilizzata per convertire un carattere in binario e inviare i segnali corrispondenti al processo destinatario identificato dal PID fornito.
-
-```c
-void ft_atob(int pid, char c)
-{
-	int bit;
-
-	bit = 0;
-	while (bit < 8)
-	{
-		if ((c & (0x01 << bit)))
-			kill(pid, SIGUSR1); // Invia il segnale SIGUSR1 al processo destinatario se il bit corrente è 1
-		else
-			kill(pid, SIGUSR2); // Invia il segnale SIGUSR2 al processo destinatario se il bit corrente è 0
-		usleep(500); // Attende per un breve periodo di tempo (500 microsecondi) prima di inviare il segnale successivo
-		bit++;
-	}
-}
-```
-
-- `bit = 0;`: Inizializza la variabile `bit` a 0, che rappresenterà la posizione del bit corrente durante la conversione in binario.
-
-- `while (bit < 8)`: Itera finché il bit corrente è inferiore a 8, rappresentando i 8 bit del carattere.
-
-- `if ((c & (0x01 << bit)))`: Controlla se il bit corrente del carattere è 1. Utilizzando l'operatore di bitwise AND (`&`) tra `c` e un valore che ha un bit impostato nella posizione corrente (`0x01 << bit`), si verifica se il bit è 1.
-
-- `kill(pid, SIGUSR1);`: Se il bit corrente è 1, viene inviato il segnale `SIGUSR1` al processo destinatario identificato dal PID fornito.
-
-- `else`: Altrimenti, se il bit corrente è 0.
-
-- `kill(pid, SIGUSR2);`: Viene inviato il segnale `SIGUSR2` al processo destinatario identificato dal PID fornito.
-
-- `usleep(500);`: Aggiunge una breve pausa di 500 microsecondi prima di inviare il segnale successivo. Questo serve a garantire che il processo destinatario abbia il tempo di gestire il segnale prima di riceverne un altro.
-
-- `bit++;`: Incrementa il valore di `bit` per passare al bit successivo durante la conversione in binario.
-
-In sintesi, la funzione `ft_atob` invia una sequenza di segnali `SIGUSR1` o `SIGUSR2` al processo destinatario per rappresentare i bit del carattere fornito.
-
-Il programma mittente, invece, invia un messaggio binario al processo server utilizzando i segnali UNIX.
-
-```c
-int main(int argc, char **argv)
-{
-	int pid;
-	int i;
-
-	i = 0;
-
-	if (argc == 3)
-	{
-		pid = ft_atoi(argv[1]); // Converte il secondo argomento in un intero (PID del processo destinatario)
-		while (argv[2][i] != '\0')
-		{
-			ft_atob(pid, argv[2][i]); // Converte il carattere in binario e invia i segnali corrispondenti al processo destinatario
-			i++;
-		}
-		signal(SIGUSR2, confirm_msg); // Imposta il signal handler per SIGUSR2 per confermare la ricezione del messaggio
-		ft_atob(pid, '\0'); // Invia un carattere nullo come fine del messaggio
-	}
-	else
-	{
-		ft_printf("Error\n");
-		return (1);
-	}
-
-	return (0);
-}
-```
-
-- `if (argc == 3)`: Controlla se ci sono esattamente tre argomenti passati al programma, il che indica che è stato fornito il PID del processo destinatario e il messaggio da inviare.
-
-- `pid = ft_atoi(argv[1]);`: Converte il secondo argomento passato (argv[1]) in un intero utilizzando la funzione `ft_atoi` e lo assegna alla variabile `pid`. Questo rappresenta il PID del processo destinatario.
-
-- `while (argv[2][i] != '\0')`: Itera attraverso i caratteri del messaggio (argv[2]) fino a quando non viene raggiunto il carattere di fine stringa ('\0').
-
-- `ft_atob(pid, argv[2][i]);`: Invoca la funzione `ft_atob` per convertire il carattere in binario e inviare i segnali corrispondenti al processo destinatario identificato dal PID.
-
-- `signal(SIGUSR2, confirm_msg);`: Imposta il signal handler `confirm_msg` per il segnale `SIGUSR2`. Questo signal handler viene chiamato quando il processo destinatario invia il segnale `SIGUSR2` come conferma di ricezione del messaggio.
-
-- `ft_atob(pid, '\0');`: Invia un carattere nullo ('\0') come fine del messaggio per indicare al processo destinatario che il messaggio è completo.
-
-- `else`: Viene eseguito se il numero di argomenti non è corretto (diverso da 3). Viene stampato un messaggio di errore e il programma termina con un codice di uscita 1.
-
-- `return (0);`: Termina il programma con un codice di uscita 0, indicando che il programma è stato eseguito correttamente.
-
-
 ## ⏭️ Bonus
 
 Per quel che riguarda la parte bonus andremo ad aggiungere una conferma di ricezione.
@@ -340,4 +351,3 @@ Quando un segnale viene ricevuto e associato a un'azione tramite `sigaction`, la
 
 In sintesi, `sigaction` consente di definire una funzione di gestione personalizzata per un segnale specifico, consentendo di controllare il comportamento del programma quando tale segnale viene ricevuto.
 
-  
